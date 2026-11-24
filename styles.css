@@ -1,0 +1,160 @@
+:root {
+  --green: #1b7a3d;
+  --green-dark: #145c2e;
+  --bg: #f4f6f3;
+  --card: #ffffff;
+  --text: #1d2b20;
+  --muted: #6b7a6e;
+  --line: #e2e8e2;
+  --amber: #e8912d;
+  --red: #c0392b;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--green);
+  color: #fff;
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-logo { width: 44px; height: 44px; border-radius: 10px; background: #fff; }
+.brand h1 { font-size: 18px; margin: 0; }
+.brand p { font-size: 13px; margin: 2px 0 0; opacity: .9; }
+.btn {
+  border: none;
+  border-radius: 8px;
+  padding: 9px 14px;
+  font-size: 15px;
+  cursor: pointer;
+}
+.btn-primary { background: var(--green); color: #fff; }
+.btn-outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.7); }
+.btn-ghost { background: transparent; color: var(--green); }
+.demo-banner {
+  background: #fff7e0;
+  color: #7a5b00;
+  padding: 8px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid #f0dfa0;
+}
+.sync-state { padding: 6px 16px; font-size: 13px; color: var(--muted); }
+.sync-state.ok { color: var(--green); }
+.tabs { display: flex; gap: 4px; padding: 0 12px; }
+.tab {
+  flex: 1;
+  padding: 11px 0;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  color: var(--muted);
+}
+.tab.active { color: var(--green); border-bottom-color: var(--green); font-weight: 700; }
+main { padding: 12px 16px 32px; }
+.month-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.month-bar h2 { font-size: 17px; margin: 0; text-transform: capitalize; }
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-top: 12px;
+}
+.cal-head {
+  font-size: 12px;
+  text-align: center;
+  color: var(--muted);
+  padding: 4px 0;
+}
+.day {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-height: 56px;
+  padding: 6px;
+  font-size: 13px;
+}
+.day .dnum { font-weight: 700; }
+.day .dhours { display: block; margin-top: 4px; font-size: 12px; color: var(--green); }
+.day.empty { background: transparent; border-color: transparent; }
+.day.today { border: 2px solid var(--amber); }
+.day.issue { background: #fdf0ee; }
+.day.holiday { background: #eef6ee; }
+.legend { display: flex; gap: 16px; margin-top: 12px; font-size: 13px; color: var(--muted); }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; }
+.dot-work { background: var(--green); }
+.dot-holiday { background: #9dc89d; }
+.dot-issue { background: var(--red); }
+.spirit {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 16px;
+}
+.spirit h3 { margin: 0 0 8px; font-size: 16px; }
+.spirit ol { margin: 0; padding-left: 20px; }
+.spirit li { margin: 4px 0; }
+.rule { margin: 10px 0 0; font-size: 14px; }
+.employee-list { display: grid; gap: 10px; }
+.employee-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  font-size: 15px;
+}
+.employee-card strong { font-size: 16px; }
+.employee-card span { display: block; color: var(--muted); font-size: 13px; margin-top: 4px; }
+.employee-detail { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+.employee-detail h3 { margin-top: 0; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 7px 4px; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 600; }
+.salary { margin-top: 14px; }
+.salary .row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.salary .total { font-weight: 700; font-size: 17px; }
+.back-link { background: none; border: none; color: var(--green); cursor: pointer; padding: 0; margin-bottom: 10px; font-size: 14px; }
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+/* BẮT BUỘC: display:flex ở trên lấn thuộc tính hidden của trình duyệt,
+   nên phải tắt hẳn khi modal đang hidden — không có dòng này thì hộp thoại
+   đăng nhập hiện ngay khi mở trang và nút Hủy cũng không đóng được. */
+.modal[hidden] { display: none; }
+.modal-card { background: #fff; border-radius: 14px; padding: 20px; width: 100%; max-width: 360px; }
+.modal-card h3 { margin-top: 0; }
+.modal-card label { display: block; margin: 12px 0; font-size: 14px; }
+.modal-card input[type=text], .modal-card input[type=password] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 15px;
+}
+.remember { display: flex !important; align-items: center; gap: 8px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+.error { color: var(--red); font-size: 13px; }
