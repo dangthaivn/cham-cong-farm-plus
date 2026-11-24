@@ -1,44 +1,66 @@
+/* Bảng chấm công Farm Plus — giao diện theo bản Apps Script gốc:
+   font Inter, nền #f8fafc, chữ navy #0f172a, điểm nhấn cam #ffa800. */
 :root {
-  --green: #1b7a3d;
-  --green-dark: #145c2e;
-  --bg: #f4f6f3;
+  --navy: #0f172a;
+  --orange: #f59e0b;
+  --orange-strong: #ea580c;
+  --amber: #ffa800;
+  --bg: #f8fafc;
   --card: #ffffff;
-  --text: #1d2b20;
-  --muted: #6b7a6e;
-  --line: #e2e8e2;
-  --amber: #e8912d;
-  --red: #c0392b;
+  --text: #0f172a;
+  --muted: #64748b;
+  --line: #e2e8f0;
+  --green: #16a34a;
+  --green-bg: #dcfce7;
+  --green-text: #15803d;
+  --red: #ef4444;
 }
 * { box-sizing: border-box; }
+button, input { font-family: inherit; }
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background: var(--bg);
   color: var(--text);
+  -webkit-font-smoothing: antialiased;
 }
+
+/* Header trắng như bản gốc */
 .app-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  background: var(--green);
-  color: #fff;
+  gap: 10px;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
 }
-.brand { display: flex; align-items: center; gap: 10px; }
-.brand-logo { width: 44px; height: 44px; border-radius: 10px; background: #fff; }
-.brand h1 { font-size: 18px; margin: 0; }
-.brand p { font-size: 13px; margin: 2px 0 0; opacity: .9; }
-.btn {
-  border: none;
-  border-radius: 8px;
-  padding: 9px 14px;
-  font-size: 15px;
-  cursor: pointer;
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand-logo { width: 50px; height: 50px; flex: 0 0 auto; }
+.brand-line1 { display: block; font-size: 17px; font-weight: 700; line-height: 1.15; }
+.brand-line2 { display: block; font-size: 19px; font-weight: 800; line-height: 1.15; color: var(--orange); }
+.header-right { display: flex; align-items: center; gap: 8px; }
+.header-pills { display: flex; flex-direction: column; gap: 5px; align-items: flex-end; }
+.pill {
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
 }
-.btn-primary { background: var(--green); color: #fff; }
-.btn-outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.7); }
-.btn-ghost { background: transparent; color: var(--green); }
+.pill-sync { background: #f1f5f9; color: var(--muted); }
+.pill-sync.ok { background: var(--green-bg); color: var(--green-text); }
+.pill-month { background: #f1f5f9; color: var(--text); }
+
+.btn { border: none; border-radius: 10px; padding: 10px 14px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.btn-admin { background: var(--navy); color: #fff; padding: 11px 13px; font-size: 13.5px; }
+.btn-primary { background: var(--navy); color: #fff; }
+.btn-ghost { background: transparent; color: var(--navy); font-size: 26px; line-height: 1; padding: 0 8px; }
+
 .demo-banner {
   background: #fff7e0;
   color: #7a5b00;
@@ -46,115 +68,137 @@ body {
   font-size: 13px;
   border-bottom: 1px solid #f0dfa0;
 }
-.sync-state { padding: 6px 16px; font-size: 13px; color: var(--muted); }
-.sync-state.ok { color: var(--green); }
-.tabs { display: flex; gap: 4px; padding: 0 12px; }
-.tab {
-  flex: 1;
-  padding: 11px 0;
-  border: none;
-  background: transparent;
-  font-size: 15px;
-  border-bottom: 3px solid transparent;
-  cursor: pointer;
-  color: var(--muted);
-}
-.tab.active { color: var(--green); border-bottom-color: var(--green); font-weight: 700; }
-main { padding: 12px 16px 32px; }
-.month-bar {
+
+/* Tab dạng viên thuốc, cuộn ngang — như bản gốc */
+.tabs {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 12px 16px 2px;
 }
-.month-bar h2 { font-size: 17px; margin: 0; text-transform: capitalize; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  flex: 0 0 auto;
+  padding: 9px 16px;
+  border: none;
+  border-radius: 999px;
+  background: #e8edf3;
+  color: var(--text);
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.tab.active { background: var(--navy); color: #fff; }
+
+main { max-width: 640px; margin: 0 auto; padding: 12px 16px 32px; }
+
+/* Hộp lưu ý thưởng chuyên cần */
+.notice {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #475569;
+}
+.notice-star { color: var(--orange); }
+.notice strong { color: var(--orange-strong); }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  margin-top: 14px;
+}
+.card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; }
+.card-head-text { flex: 1; text-align: center; }
+.card-head h2 { font-size: 17px; font-weight: 800; margin: 0; letter-spacing: .2px; }
+.card-sub { margin: 4px 0 0; font-size: 13.5px; color: var(--muted); }
+
+.legend { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.chip { font-size: 12.5px; font-weight: 600; padding: 5px 11px; border-radius: 999px; }
+.chip-work { background: #dcfce7; color: #15803d; }
+.chip-holiday { background: #fce7f3; color: #be185d; }
+.chip-issue { background: #fef3c7; color: #b45309; }
+
 .calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 6px;
   margin-top: 12px;
 }
-.cal-head {
-  font-size: 12px;
-  text-align: center;
-  color: var(--muted);
-  padding: 4px 0;
-}
+.cal-head { font-size: 12px; font-weight: 600; text-align: center; color: var(--muted); padding: 4px 0; }
+.cal-head.sun { color: var(--red); }
 .day {
+  position: relative;
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 8px;
-  min-height: 56px;
-  padding: 6px;
+  border-radius: 10px;
+  min-height: 58px;
+  padding: 6px 7px;
   font-size: 13px;
 }
-.day .dnum { font-weight: 700; }
-.day .dhours { display: block; margin-top: 4px; font-size: 12px; color: var(--green); }
-.day.empty { background: transparent; border-color: transparent; }
-.day.today { border: 2px solid var(--amber); }
-.day.issue { background: #fdf0ee; }
-.day.holiday { background: #eef6ee; }
-.legend { display: flex; gap: 16px; margin-top: 12px; font-size: 13px; color: var(--muted); }
-.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; }
-.dot-work { background: var(--green); }
-.dot-holiday { background: #9dc89d; }
-.dot-issue { background: var(--red); }
-.spirit {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 14px;
-  margin-top: 16px;
+.day .dnum { font-weight: 700; font-size: 14px; }
+.day .dhours {
+  position: absolute;
+  right: 7px;
+  bottom: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--green);
+  font-variant-numeric: tabular-nums;
 }
-.spirit h3 { margin: 0 0 8px; font-size: 16px; }
-.spirit ol { margin: 0; padding-left: 20px; }
-.spirit li { margin: 4px 0; }
-.rule { margin: 10px 0 0; font-size: 14px; }
-.employee-list { display: grid; gap: 10px; }
-.employee-card {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 14px;
-  text-align: left;
-  width: 100%;
-  cursor: pointer;
-  font-size: 15px;
-}
-.employee-card strong { font-size: 16px; }
-.employee-card span { display: block; color: var(--muted); font-size: 13px; margin-top: 4px; }
-.employee-detail { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
-.employee-detail h3 { margin-top: 0; }
+.day.empty { background: #f1f5f9; border-color: transparent; }
+.day.today { border: 2px solid var(--orange); }
+.day.today .dnum { color: var(--orange-strong); }
+.day.issue { background: #fffbeb; }
+.day.holiday { background: #fdf2f8; }
+
+.spirit h3 { margin: 0 0 8px; font-size: 16px; font-weight: 700; }
+.spirit ol { margin: 0; padding-left: 20px; color: #334155; }
+.spirit li { margin: 4px 0; font-size: 14.5px; line-height: 1.5; }
+
+/* Chi tiết nhân viên */
+.employee-detail h3 { margin: 0 0 12px; font-size: 18px; font-weight: 700; }
 table { width: 100%; border-collapse: collapse; font-size: 14px; }
-th, td { text-align: left; padding: 7px 4px; border-bottom: 1px solid var(--line); }
+th, td { text-align: left; padding: 7px 4px; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
 th { color: var(--muted); font-weight: 600; }
 .salary { margin-top: 14px; }
-.salary .row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--line); }
-.salary .total { font-weight: 700; font-size: 17px; }
-.back-link { background: none; border: none; color: var(--green); cursor: pointer; padding: 0; margin-bottom: 10px; font-size: 14px; }
+.salary .row { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 14.5px; }
+.salary .row span:last-child { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.salary .total { font-weight: 700; font-size: 17px; border-bottom: none; }
+.employee-detail .btn-primary { margin-top: 14px; width: 100%; padding: 12px; }
+
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.45);
+  background: rgba(15, 23, 42, .45);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
+  z-index: 10;
 }
 /* BẮT BUỘC: display:flex ở trên lấn thuộc tính hidden của trình duyệt,
    nên phải tắt hẳn khi modal đang hidden — không có dòng này thì hộp thoại
    đăng nhập hiện ngay khi mở trang và nút Hủy cũng không đóng được. */
 .modal[hidden] { display: none; }
-.modal-card { background: #fff; border-radius: 14px; padding: 20px; width: 100%; max-width: 360px; }
-.modal-card h3 { margin-top: 0; }
-.modal-card label { display: block; margin: 12px 0; font-size: 14px; }
+.modal-card { background: #fff; border-radius: 16px; padding: 20px; width: 100%; max-width: 360px; }
+.modal-card h3 { margin-top: 0; font-size: 18px; }
+.modal-card label { display: block; margin: 12px 0; font-size: 14px; font-weight: 500; }
 .modal-card input[type=text], .modal-card input[type=password] {
   width: 100%;
-  padding: 10px;
+  padding: 10px 12px;
   margin-top: 4px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 15px;
 }
-.remember { display: flex !important; align-items: center; gap: 8px; }
+.remember { display: flex !important; align-items: center; gap: 8px; font-weight: 400 !important; }
 .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 .error { color: var(--red); font-size: 13px; }

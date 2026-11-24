@@ -3,63 +3,86 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#1b7a3d">
+<meta name="theme-color" content="#ffffff">
 <meta name="description" content="Bảng chấm công & lương thưởng — Cửa hàng Farm Plus">
 <title>Bảng chấm công Farm Plus</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <header class="app-header">
   <div class="brand">
-    <img src="icons/icon.svg" alt="Farm Plus" class="brand-logo">
-    <div>
-      <h1>Cửa hàng Farm Plus</h1>
-      <p>Bảng chấm công &amp; Lương thưởng</p>
+    <svg class="brand-logo" viewBox="0 0 64 64" role="img" aria-label="Farm Plus">
+      <rect x="1.5" y="1.5" width="61" height="61" rx="14" fill="#ffffff" stroke="#fcd9a8" stroke-width="2"/>
+      <text x="30" y="37" font-family="Inter, Arial, sans-serif" font-size="27" font-weight="800" fill="#f59e0b" text-anchor="middle">F</text>
+      <g fill="#f59e0b">
+        <circle cx="47" cy="11" r="2.6"/>
+        <circle cx="51" cy="15" r="2.6"/>
+        <circle cx="47" cy="19" r="2.6"/>
+        <circle cx="43" cy="15" r="2.6"/>
+      </g>
+      <text x="32" y="54" font-family="Inter, Arial, sans-serif" font-size="8.5" font-weight="700" fill="#ea8c00" text-anchor="middle" letter-spacing="0.4">Farm Plus</text>
+    </svg>
+    <div class="brand-text">
+      <span class="brand-line1">Cửa hàng</span>
+      <span class="brand-line2">Farm Plus</span>
     </div>
   </div>
-  <button id="adminBtn" class="btn btn-outline" type="button">🔒 Quản lý</button>
+  <div class="header-right">
+    <div class="header-pills">
+      <span id="syncState" class="pill pill-sync">Đang tải Sheets…</span>
+      <span id="monthPill" class="pill pill-month">tháng 11 năm 2026</span>
+    </div>
+    <button id="adminBtn" class="btn btn-admin" type="button">🔒 Quản lý</button>
+  </div>
 </header>
 
 <div id="demoBanner" class="demo-banner" hidden>
   Dữ liệu tháng 11/2026 lấy từ Sheets ngày 24/11 — chưa đồng bộ trực tiếp, sẽ tự cập nhật khi nối API.
 </div>
-<div id="syncState" class="sync-state">Đang tải Sheets…</div>
 
-<nav class="tabs">
+<nav class="tabs" id="tabs">
   <button class="tab active" data-view="overview" type="button">Tổng quan</button>
-  <button class="tab" data-view="employees" type="button">Nhân viên</button>
 </nav>
 
 <main>
   <section id="view-overview" class="view">
-    <div class="month-bar">
-      <button id="prevMonth" class="btn btn-ghost" type="button">‹</button>
-      <h2 id="monthLabel">tháng 11 năm 2026</h2>
-      <button id="nextMonth" class="btn btn-ghost" type="button">›</button>
+    <aside class="notice"><span class="notice-star">★</span> <strong>Thưởng chuyên cần:</strong> Áp dụng khi nghỉ tối đa 1 ngày/tháng và đi trễ tối đa 3 lần/tháng (nghỉ từ 2 ngày hoặc đi trễ lần thứ 4 sẽ mất thưởng).</aside>
+
+    <div class="card calendar-card">
+      <div class="card-head">
+        <button id="prevMonth" class="btn btn-ghost" type="button" aria-label="Tháng trước">‹</button>
+        <div class="card-head-text">
+          <h2 id="monthTitle">LỊCH THÁNG 11/2026</h2>
+          <p class="card-sub">Chọn ngày trên lịch để xem chi tiết ca làm</p>
+        </div>
+        <button id="nextMonth" class="btn btn-ghost" type="button" aria-label="Tháng sau">›</button>
+      </div>
+      <div class="legend">
+        <span class="chip chip-work">Có ca</span>
+        <span class="chip chip-holiday">Lễ</span>
+        <span class="chip chip-issue">Trễ / Nghỉ</span>
+      </div>
+      <div id="calendar" class="calendar"></div>
     </div>
-    <div id="calendar" class="calendar"></div>
-    <div class="legend">
-      <span><i class="dot dot-work"></i> Có ca</span>
-      <span><i class="dot dot-holiday"></i> Lễ</span>
-      <span><i class="dot dot-issue"></i> Trễ / Nghỉ</span>
-    </div>
-    <aside class="spirit">
+
+    <aside class="card spirit">
       <h3>Tinh thần Farm Plus</h3>
       <ol>
         <li>Quản lý nhập giờ vào / ra ca mỗi ngày.</li>
         <li>Lương thưởng bám sát từng hoạt động, từng người.</li>
         <li>Ghi nhận ngày nghỉ, ngày muộn, vi phạm.</li>
       </ol>
-      <p class="rule">🎖 Thưởng chuyên cần: nghỉ tối đa 1 ngày/tháng, trễ tối đa 3 lần/tháng.</p>
     </aside>
   </section>
 
-  <section id="view-employees" class="view" hidden>
-    <div id="employeeList" class="employee-list"></div>
-    <div id="employeeDetail" class="employee-detail" hidden></div>
+  <section id="view-employee" class="view" hidden>
+    <div id="employeeDetail" class="employee-detail"></div>
   </section>
 </main>
 

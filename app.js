@@ -23,7 +23,7 @@ const DEMO_DATA = {
   ]
 };
 
-const state = { month: "2026-11", data: null, demo: true };
+const state = { month: "2026-11", data: null, demo: true, view: "overview", selectedEmp: null };
 const $ = (s) => document.querySelector(s);
 const fmt = (n) => n.toLocaleString("vi-VN");
 
@@ -62,9 +62,12 @@ function monthLabel(month) {
 }
 
 function render() {
-  $("#monthLabel").textContent = monthLabel(state.month);
+  const [y, m] = state.month.split("-").map(Number);
+  $("#monthTitle").textContent = `LỊCH THÁNG ${m}/${y}`;
+  $("#monthPill").textContent = monthLabel(state.month);
   renderCalendar();
-  renderEmployeeList();
+  renderTabs();
+  if (state.view === "employee" && state.selectedEmp) showEmployee(state.selectedEmp);
 }
 
 function renderCalendar() {
@@ -75,7 +78,7 @@ function renderCalendar() {
   const today = new Date();
   const isCurrentMonth = today.getFullYear() === y && today.getMonth() + 1 === m;
   let html = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"]
-    .map((d) => `<div class="cal-head">${d}</div>`).join("");
+    .map((d) => `<div class="cal-head${d === "CN" ? " sun" : ""}">${d}</div>`).join("");
   for (let i = 0; i < firstDow; i++) html += `<div class="day empty"></div>`;
   for (let d = 1; d <= daysInMonth; d++) {
     const total = state.data.totalsByDay[d];
@@ -84,7 +87,7 @@ function renderCalendar() {
     if (isCurrentMonth && d === today.getDate()) cls.push("today");
     if (issue) cls.push("issue");
     html += `<div class="${cls.join(" ")}"><span class="dnum">${d}</span>` +
-      (total != null ? `<span class="dhours">${String(total).replace(".", ",")}h</span>` : "") +
+      (total != null ? `<span class="dhours">${total}h</span>` : "") +
       `</div>`;
   }
   cal.innerHTML = html;
@@ -102,19 +105,20 @@ function salaryOf(emp) {
   };
 }
 
-function renderEmployeeList() {
-  const list = $("#employeeList");
-  list.innerHTML = state.data.employees.map((e) => {
-    const s = salaryOf(e);
-    return `<button class="employee-card" data-id="${e.id}" type="button">
-      <strong>${e.name}</strong>
-      <span>${e.hours} giờ · Lương ${fmt(s.total)}đ</span>
-    </button>`;
-  }).join("");
-  list.querySelectorAll(".employee-card").forEach((btn) => {
-    btn.addEventListener("click", () => showEmployee(btn.dataset.id));
+// Tabs: Tổng quan + từng nhân viên (như bản gốc) — dựng lại mỗi lần có dữ liệu.
+function renderTabs() {
+  const tabsEl = $("#tabs");
+  const overview = tabsEl.querySelector('[data-view="overview"]');
+  tabsEl.querySelectorAll("[data-emp]").forEach((t) => t.remove());
+  state.data.employees.forEach((e) => {
+    const btn = document.createElement("button");
+    btn.className = "tab" + (state.view === "employee" && state.selectedEmp === e.id ? " active" : "");
+    btn.type = "button";
+    btn.dataset.emp = e.id;
+    btn.textContent = e.name;
+    tabsEl.appendChild(btn);
   });
-  $("#employeeDetail").hidden = true;
+  if (state.view === "overview") overview.classList.add("active");
 }
 
 function showEmployee(id) {
@@ -125,7 +129,6 @@ function showEmployee(id) {
     ? emp.days.map((d) => `<tr><td>${d.date}</td><td>${d.in || "—"}</td><td>${d.out || "—"}</td><td>${d.hours}</td><td>${d.note}</td></tr>`).join("")
     : `<tr><td colspan="5">Chưa có chi tiết ca — xem trên bản đầy đủ sau khi nối Sheets.</td></tr>`;
   $("#employeeDetail").innerHTML = `
-    <button class="back-link" id="backBtn" type="button">‹ Quay lại danh sách</button>
     <h3>${emp.name}</h3>
     <table>
       <thead><tr><th>Ngày</th><th>Vào</th><th>Ra</th><th>Giờ</th><th>Ghi chú</th></tr></thead>
@@ -140,19 +143,25 @@ function showEmployee(id) {
       <div class="row total"><span>Tổng lương</span><span>${fmt(s.total)}đ</span></div>
     </div>
     <button class="btn btn-primary" type="button" onclick="window.print()">In phiếu lương</button>`;
-  $("#employeeDetail").hidden = false;
-  $("#backBtn").addEventListener("click", () => { $("#employeeDetail").hidden = true; });
 }
 
-// Tabs
-document.querySelectorAll(".tab").forEach((tab) => {
-  tab.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
-    tab.classList.add("active");
-    const view = tab.dataset.view;
-    $("#view-overview").hidden = view !== "overview";
-    $("#view-employees").hidden = view !== "employees";
-  });
+// Tabs — dùng event delegation vì tab nhân viên được dựng động.
+$("#tabs").addEventListener("click", (e) => {
+  const tab = e.target.closest(".tab");
+  if (!tab) return;
+  document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+  tab.classList.add("active");
+  if (tab.dataset.view === "overview") {
+    state.view = "overview";
+    $("#view-overview").hidden = false;
+    $("#view-employee").hidden = true;
+  } else if (tab.dataset.emp) {
+    state.view = "employee";
+    state.selectedEmp = tab.dataset.emp;
+    $("#view-overview").hidden = true;
+    $("#view-employee").hidden = false;
+    showEmployee(state.selectedEmp);
+  }
 });
 
 // Đổi tháng (bản mẫu chỉ có dữ liệu tháng 11/2026)
