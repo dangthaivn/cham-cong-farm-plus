@@ -1,7 +1,7 @@
 /* Service worker — Bảng chấm công Farm Plus (PWA).
  * Giao diện (app shell) chạy được offline; dữ liệu Sheets luôn lấy mới từ mạng,
  * khi mất mạng thì app dùng dữ liệu mẫu đã lưu trong app.js và báo rõ cho người dùng. */
-const CACHE = "cham-cong-farmplus-v1";
+const CACHE = "cham-cong-farmplus-v2";
 const SHELL = [
   "./",
   "index.html",
